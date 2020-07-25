@@ -20,7 +20,7 @@ class View1 : Fragment() {
     lateinit var nameValue  : EditText
     lateinit var ageKey     : TextView
     lateinit var ageValue   : TextView
-    val viewModel           : MainViewModel by viewModels()
+    val viewModel           : MainViewModel by activityViewModels()
 
     companion object {
         fun newInstance() = View1()
