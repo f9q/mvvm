@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.example.mvvm.R
 import com.example.mvvm.viewmodel.MainViewModel
@@ -19,7 +20,7 @@ class View1 : Fragment() {
     lateinit var nameValue  : EditText
     lateinit var ageKey     : TextView
     lateinit var ageValue   : TextView
-    lateinit var viewModel  : MainViewModel
+    val viewModel           : MainViewModel by viewModels()
 
     companion object {
         fun newInstance() = View1()
@@ -46,7 +47,7 @@ class View1 : Fragment() {
     }
 
     fun bindViewModel(){
-        viewModel.userData.observe(this){user->
+        viewModel.loadUser().observe(viewLifecycleOwner){user->
             nameValue.setText(user.name)
             ageValue.setText(user.age.toString())
         }
@@ -61,8 +62,8 @@ class View1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val vmp = ViewModelProvider(this)
-        viewModel = vmp.get(MainViewModel::class.java)
+//        val vmp = ViewModelProvider(this)
+//        viewModel = vmp.get(MainViewModel::class.java)
         bindViewModel()
     }
 
@@ -73,6 +74,10 @@ class View1 : Fragment() {
     override fun onStop() {
         super.onStop()
 //        viewModel.user.removeObserver(this)//无需
+    }
+
+    override fun onDetach() {
+        super.onDetach()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

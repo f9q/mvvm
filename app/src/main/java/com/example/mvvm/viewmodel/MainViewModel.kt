@@ -2,21 +2,35 @@ package com.example.mvvm.viewmodel
 
 import android.os.AsyncTask
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.mvvm.model.User
+import com.example.mvvm.model.UserModel
 import java.util.*
 
 class MainViewModel : ViewModel{
-    constructor():super()
 
-    var userData    =   MediatorLiveData<User>()
+    constructor():super(){
+        loadUser()
+    }
+    var saved       :   SavedStateHandle?          = null
     var task        :   AsyncTask<Void, User,Unit>? = null
     var timer       :   Timer?                      = null
+    var userModel   :   UserModel                   = UserModel()
 
-    init{
-        userData.value = User()
+    fun loadUser() : LiveData<User>{
+        val ud = userModel.userFromServer()
+        return ud
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.e("MainViewModel","onCleared")
+        cancelTask()
+    }
+
 
     //1.MutableLiveData
     fun test1(){
@@ -24,12 +38,12 @@ class MainViewModel : ViewModel{
         val timer = Timer()
         timer.schedule(object : TimerTask(){
             override fun run() {
+                val userData = userModel.userFromServer()
                 val user = userData.value
                 val age = user!!.age + 1
-                val name = user.name.substringBefore("-")
-                user.age = age
-                user.name="$name-$age"
-                userData.value = user
+                var name = user.name.substringBefore("-")
+                name = "$name-$age"
+                userModel.modifyUser(age,name)
             }
 
         },1000 * 3,1000 * 3)
@@ -41,8 +55,9 @@ class MainViewModel : ViewModel{
                 timer = Timer()
                 timer?.schedule(object : TimerTask(){
                     override fun run() {
+                        val userData = userModel.userFromServer()
                         val user = userData.value
-                        var age = user!!.age + 1
+                        val age = user!!.age + 1
                         val name = user?.name?.substringBefore("-")
                         user?.age = age
                         user?.name="$name-$age"
@@ -57,7 +72,9 @@ class MainViewModel : ViewModel{
             override fun onProgressUpdate(vararg values: User?) {
                 super.onProgressUpdate(*values)
                 val v = values[0]
-                userData.value = v
+                val name = v?.name
+                val age = v?.age
+                userModel.modifyUser(age!!,name!!)
             }
 
             override fun onPostExecute(result: Unit?) {
@@ -75,6 +92,8 @@ class MainViewModel : ViewModel{
         task.execute()
     }
     fun cancelTask(){
+        Log.e("MainViewModel","cancelTask")
+
         timer?.cancel()
         timer = null
         task?.cancel(true)

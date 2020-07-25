@@ -3,11 +3,8 @@ package com.example.mvvm.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mvvm.R
-import com.example.mvvm.viewmodel.MainViewModel
 
 class MainView : AppCompatActivity() {
-
-    lateinit var viewModel : MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +22,5 @@ class MainView : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.cancelTask()
     }
 }

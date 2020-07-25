@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.mvvm.R
@@ -18,7 +19,7 @@ class View2 : Fragment() {
     lateinit var nameValue  : EditText
     lateinit var ageKey     : TextView
     lateinit var ageValue   : TextView
-    lateinit var viewModel  : MainViewModel
+    val viewModel           : MainViewModel by activityViewModels()
 
 
     fun initView(v : View){
@@ -28,8 +29,8 @@ class View2 : Fragment() {
         ageValue    = v.findViewById(R.id.ageValue)
     }
 
-    fun bindViewModel(){
-        viewModel.userData.observe(this){user->
+    fun observerData(){
+        viewModel.loadUser().observe(viewLifecycleOwner){user->
             nameValue.setText(user.name)
             ageValue.setText(user.age.toString())
         }
@@ -44,9 +45,7 @@ class View2 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val vmp = ViewModelProvider(this)
-        viewModel = vmp.get(MainViewModel::class.java)
-        bindViewModel()
+        observerData()
     }
 
     override fun onStart() {
