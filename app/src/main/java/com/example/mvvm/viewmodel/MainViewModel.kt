@@ -15,7 +15,6 @@ class MainViewModel : ViewModel{
     constructor():super(){
         loadUser()
     }
-    var saved       :   SavedStateHandle?          = null
     var task        :   AsyncTask<Void, User,Unit>? = null
     var timer       :   Timer?                      = null
     var userModel   :   UserModel                   = UserModel()
