@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.mvvm.R
 import com.example.mvvm.viewmodel.SavedViewModel
 
-class View3 : Fragment(){
+class Fragment3 : Fragment(){
 
-    val viewModel : SavedViewModel by viewModels()
+    val viewModel   : SavedViewModel by lazy { initViewModel() }
 
+    fun initViewModel() : SavedViewModel {
+        return ViewModelProvider(activity!!).get(SavedViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

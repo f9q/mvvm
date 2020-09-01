@@ -7,21 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.example.mvvm.R
 import com.example.mvvm.viewmodel.MainViewModel
 
-class View2 : Fragment() {
+class Fragment2 : Fragment() {
 
     lateinit var nameKey    : TextView
     lateinit var nameValue  : EditText
     lateinit var ageKey     : TextView
     lateinit var ageValue   : TextView
-    val viewModel           : MainViewModel by activityViewModels()
+    val viewModel           : MainViewModel by lazy { initViewModel() }
 
-
+    fun initViewModel() : MainViewModel{
+//        return ViewModelProvider(this).get(MainViewModel::class.java)
+        return ViewModelProvider(activity!!).get(MainViewModel::class.java)
+    }
     fun initView(v : View){
         nameKey     = v.findViewById(R.id.nameKey)
         nameValue   = v.findViewById(R.id.nameValue)

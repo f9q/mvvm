@@ -8,48 +8,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import com.example.mvvm.R
 import com.example.mvvm.viewmodel.MainViewModel
 
-class View1 : Fragment() {
+class Fragment1 : Fragment() {
 
     lateinit var nameKey    : TextView
     lateinit var nameValue  : EditText
     lateinit var ageKey     : TextView
     lateinit var ageValue   : TextView
-    val viewModel           : MainViewModel by activityViewModels()
 
-    val viewModel2 by lazy { initViewModel() }
-
+    val viewModel           : MainViewModel by lazy { initViewModel() }
 
     fun initViewModel() : MainViewModel{
-        return ViewModelProvider(this).get(MainViewModel::class.java)
-    }
-    companion object {
-        fun newInstance() = View1()
-    }
-
-    fun initView(v : View){
-        nameKey     = v.findViewById(R.id.nameKey)
-        nameValue   = v.findViewById(R.id.nameValue)
-        ageKey      = v.findViewById(R.id.ageKey)
-        ageValue    = v.findViewById(R.id.ageValue)
-
-        v.findViewById<Button>(R.id.btn_test).setOnClickListener(this::onTestClicked)
-        v.findViewById<Button>(R.id.btn_view2).setOnClickListener(this::onView2Clicked)
-    }
-
-    fun onTestClicked(v: View){
-        viewModel.cancelTask()
-        viewModel.test2()
-    }
-
-    fun onView2Clicked(v: View){
-        val ft = activity?.supportFragmentManager?.beginTransaction()
-        ft?.addToBackStack("View2")?.add(R.id.container,View2(),"View2")?.commit()
+//        return ViewModelProvider(this).get(MainViewModel::class.java)
+        return ViewModelProvider(activity!!).get(MainViewModel::class.java)
     }
 
     fun bindViewModel(){
@@ -58,14 +32,12 @@ class View1 : Fragment() {
             ageValue.setText(user.age.toString())
         }
     }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val v = inflater.inflate(R.layout.view1, container, false)
         initView(v)
         return v
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
@@ -94,5 +66,26 @@ class View1 : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+
+    fun initView(v : View){
+        nameKey     = v.findViewById(R.id.nameKey)
+        nameValue   = v.findViewById(R.id.nameValue)
+        ageKey      = v.findViewById(R.id.ageKey)
+        ageValue    = v.findViewById(R.id.ageValue)
+
+        v.findViewById<Button>(R.id.btn_test).setOnClickListener(this::onTestClicked)
+        v.findViewById<Button>(R.id.btn_view2).setOnClickListener(this::onView2Clicked)
+    }
+
+    fun onTestClicked(v: View){
+        viewModel.cancelTask()
+        viewModel.test2()
+    }
+
+    fun onView2Clicked(v: View){
+        val ft = activity?.supportFragmentManager?.beginTransaction()
+        ft?.addToBackStack("View2")?.add(R.id.container,Fragment2(),"View2")?.commit()
     }
 }

@@ -12,24 +12,24 @@ import java.util.*
 
 class MainViewModel : ViewModel{
 
-    constructor():super(){
-        loadUser()
-    }
-    var task        :   AsyncTask<Void, User,Unit>? = null
-    var timer       :   Timer?                      = null
-    var userModel   :   UserModel                   = UserModel()
+    var userModel   :   UserModel  = UserModel()
 
     fun loadUser() : LiveData<User>{
         val ud = userModel.userFromServer()
         return ud
     }
-
     override fun onCleared() {
         super.onCleared()
         Log.e("MainViewModel","onCleared")
         cancelTask()
     }
 
+
+    constructor():super(){
+        loadUser()
+    }
+    var task        :   AsyncTask<Void, User,Unit>? = null
+    var timer       :   Timer?                      = null
 
     //1.MutableLiveData
     fun test1(){
